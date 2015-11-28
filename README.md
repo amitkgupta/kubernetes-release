@@ -10,4 +10,6 @@ This project is an experiment to see if open source kubernetes and supporting so
 - why does master not start up right away?
 - why everything complains about 10.244.5.2 (master IP)?
 - is any of it resilient to restarts?
+- how much stuff is in /var/lib, etc?
+- add dns addon via kubectl errand
 - see if everything can be run not as root
