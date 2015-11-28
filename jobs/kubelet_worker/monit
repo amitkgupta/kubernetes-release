@@ -1,0 +1,6 @@
+check process kubelet_worker
+  with pidfile /var/vcap/sys/run/kubelet_worker/kubelet_worker.pid
+  start program "/var/vcap/jobs/kubelet_worker/bin/kubelet_worker_ctl start"
+  stop program "/var/vcap/jobs/kubelet_worker/bin/kubelet_worker_ctl stop"
+  group vcap
+  depends on docker

@@ -1,0 +1,55 @@
+name: kubelet_worker
+
+packages:
+  - kubelet
+
+templates:
+  kubelet_worker_ctl.erb: "bin/kubelet_worker_ctl"
+
+  kube-proxy.yaml.erb: "etc/kubernetes/manifests/kube-proxy.yaml"
+
+  worker-kubeconfig.yaml.erb: "etc/kubernetes/worker-kubeconfig.yaml"
+
+  ca.pem.erb: "etc/kubernetes/ssl/ca.pem"
+  worker.pem.erb: "etc/kubernetes/ssl/worker.pem"
+  worker-key.pem.erb: "etc/kubernetes/ssl/worker-key.pem"
+
+properties:
+  kubernetes.kubelet_worker.startup_timeout_in_seconds:
+    description: |
+      Number of seconds to wait for the kubelet server to be running after launching
+      the process.
+    default: 30
+
+  kubernetes.kubelet_worker.services.dns_ip:
+    description: |
+      The virtual IP address of the cluster DNS service. This IP must be in the
+      service IP range and cannot be the first IP in the range.
+    example: 10.244.9.2
+
+  kubernetes.kubelet_worker.pod_manifest_dir:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Location of pod manifests for bootstrap pods, namely the proxy.
+    default: /var/vcap/jobs/kubelet_worker/etc/kubernetes/manifests
+  kubernetes.kubelet_worker.ssl_dir:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Location of TLS assets.
+    default: /var/vcap/jobs/kubelet_worker/etc/kubernetes/ssl
+  kubernetes.kubelet_worker.config_dir:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Location of worker config file.
+    default: /var/vcap/jobs/kubelet_worker/etc/kubernetes
+
+  kubernetes.kubelet_worker.ssl.ca:
+    description: PEM encoded root CA that was used to sign the rest of the certificates.
+  kubernetes.kubelet_worker.ssl.worker.signing_key:
+    description: PEM encoded private RSA key that was used to create worker CSR.
+  kubernetes.kubelet_worker.ssl.worker.certificate:
+    description: PEM encoded worker certificate.
+
+  kubernetes.kubelet_worker.master_host:
+    description: IP of the kubelet master host
+    example: 10.244.5.2

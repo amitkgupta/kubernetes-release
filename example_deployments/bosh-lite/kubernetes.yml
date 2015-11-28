@@ -27,25 +27,48 @@ networks:
     - 10.244.5.1
     static:
     - 10.244.5.2
-- name: compilation
+- name: kubernetes_worker
   subnets:
   - cloud_properties:
       name: random
     range: 10.244.6.0/30
     reserved:
     - 10.244.6.1
-    static: []
+    static:
+    - 10.244.6.2
   - cloud_properties:
       name: random
     range: 10.244.6.4/30
     reserved:
     - 10.244.6.5
-    static: []
+    static:
+    - 10.244.6.6
   - cloud_properties:
       name: random
     range: 10.244.6.8/30
     reserved:
     - 10.244.6.9
+    static:
+    - 10.244.6.10
+- name: compilation
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.7.0/30
+    reserved:
+    - 10.244.7.1
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.7.4/30
+    reserved:
+    - 10.244.7.5
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.7.8/30
+    reserved:
+    - 10.244.7.9
     static: []
   type: manual
 
@@ -68,11 +91,17 @@ resource_pools:
   stemcell:
     name: bosh-warden-boshlite-ubuntu-trusty-go_agent
     version: latest
+- cloud_properties: {}
+  name: kubernetes_worker
+  network: kubernetes_worker
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
 
 update:
   canaries: 1
   max_in_flight: 1
-  serial: bosh-warden-boshlite-ubuntu-trusty-go_agent
+  serial: true
   canary_watch_time: 1000-45000
   update_watch_time: 1000-45000
 
@@ -102,6 +131,22 @@ jobs:
     release: kubernetes
   - name: kubelet_master
     release: kubernetes
+- name: worker
+  instances: 3
+  networks:
+  - name: kubernetes_worker
+    static_ips:
+    - 10.244.6.2
+    - 10.244.6.6
+    - 10.244.6.10
+  resource_pool: kubernetes_worker
+  templates:
+  - name: flannel
+    release: kubernetes
+  - name: docker
+    release: kubernetes
+  - name: kubelet_worker
+    release: kubernetes
 
 properties:
   etcd:
@@ -114,12 +159,12 @@ properties:
     flannel:
       etcd:
         endpoints: ["http://10.244.4.2:4001"]
-      pod_network: 10.244.7.0/24
+      pod_network: 10.244.8.0/24
 
     kubelet_master:
       services:
-        dns_ip: 10.244.8.2
-        ip_range: 10.244.8.0/24
+        dns_ip: 10.244.9.2
+        ip_range: 10.244.9.0/24
       ssl:
         ca: |
           -----BEGIN CERTIFICATE-----
@@ -192,3 +237,76 @@ properties:
             -----END CERTIFICATE-----
       etcd:
         endpoints: ["http://10.244.4.2:4001"]
+
+    kubelet_worker:
+      services:
+        dns_ip: 10.244.9.2
+      ssl:
+        ca: |
+          -----BEGIN CERTIFICATE-----
+          MIIDGjCCAgKgAwIBAgIJAJEpHbAVS+NLMA0GCSqGSIb3DQEBBQUAMBIxEDAOBgNV
+          BAMTB2t1YmUtY2EwHhcNMTUxMTI4MDAzMTA2WhcNNDMwNDE1MDAzMTA2WjASMRAw
+          DgYDVQQDEwdrdWJlLWNhMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+          u/2z/xnQdOwXieHeI8/H+sgLZ0GDrrHvnASK/Kh2rSgPuR/u0sd58eqNRzHGhA2j
+          VryQpNRd9NYj/2EJyNmwxJIVsniPahSpCqu6OgDS2sSy1RsSwzjEuvPqzi3a6Md1
+          zrDbT4aPJXowDdclg6kjBu1b06NUTuQr6jf4QM4owDLukdKjpvNV2+tDRdmIgLu0
+          yF0uEhmQvsLjHR2IrwPH6+xkRtkwNCqBWzLl+M1ZuHx4cS9b0BIGGz/Lzcnw6HeU
+          z0XLEoRtQocnnpqR47EEvlY5h9/s9WiOAuRCyebYbjSU2hS/NpfjLJ3/yO8AS7br
+          OIORB4tEv0pXPiciuOegQQIDAQABo3MwcTAdBgNVHQ4EFgQUVBfKpNrqy2tCvRFy
+          ysVhmKSXeQUwQgYDVR0jBDswOYAUVBfKpNrqy2tCvRFyysVhmKSXeQWhFqQUMBIx
+          EDAOBgNVBAMTB2t1YmUtY2GCCQCRKR2wFUvjSzAMBgNVHRMEBTADAQH/MA0GCSqG
+          SIb3DQEBBQUAA4IBAQAc7dHF6a5Qb5calIi71JvJalQQzKlVft1cP9ozeHtiUN7l
+          VUCRJ+5rnu6WCXWWClA6y8bxkAqRZWT6pV3Lx1eSMs0SNgbDsjQcARODsfUO1oDJ
+          LCvHErmpEfxRvew10AzYjwi8Mr/I8zxnUagvGBk0ON7ck1oZPHPbhMIJuXjHS2vZ
+          QYvalnwMyYxE6yr2OzDxyyKbCBAnT7wDg1Bna9j4UsH/JPjQBfUkqeiqI6ImBNSR
+          +1E9a7yBZ4kPgGJtssy3FqdgobM0N7s4LAAatV8tMSnp6lpMNuyNKMaooeEoJ5n4
+          SSJEuiV8EU6O9W6FLG2wdarEPeC3rQ/XY7860hjL
+          -----END CERTIFICATE-----
+        worker:
+          signing_key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpAIBAAKCAQEA23WE/tQZIlXuvkFk0Q6oblNSvUW1qwqfoHFmxlDQGBly7GdE
+            em3daQhr81978rFzvvrMnZDphB6B6ezAFJ+WL3ndLAN3HxN+85YxI3hPV+z5KE2Q
+            WoQc7AEc1DlQx9PiX5FPDfQOtguw/GeA6h3NrOSTSa44kXay5fox+8NnjJaiS0Hi
+            FpU1eUPRyP4t1RgiO9aVxvQdw2l8XZuDjIM72qrA0qyjTnhomZGlozvQ2X5JY7Zm
+            V4Ie1HpGMRkB8rK2VMnE77HV+yR5wRIhnBI5so7aHllmTZrI35MeuRCeZJCecz0L
+            vBGo+Gjzd8fbVkzxHwgXJ2TO7iYdGvHGS3I1PQIDAQABAoIBAGRvdytMlCgjnbyS
+            nvoSNEExfvdCNO8PUJiT7Y4rI+EznGXWqP9C0oakJQtfkpEyZx9rFkOyMzyU3a3Z
+            /NozYv9dTTw8ZcLiIEKIZPqvr9g0ip7ISJ00Qyw7Ih96D580ODC2hrCDFkx4M0qA
+            b/41H5DVlxasVhU0dpFLnJ51AinTWWWsOVlzhxn9yg3D1WCI8jr5beHbAAVB7hc6
+            MqqrN6sn9AZB1W1NFy+1+hfuD6ca3CL0yszGb9gOJH8DG1ep6k9kZG2C9v3Su7/T
+            /xCSyAHeEfFeDsLIV05DENF1PrUGNZeFbUXgESdQgh/Q9bUSfk3lJgATyDLYLJth
+            zsL4ROECgYEA9R0gjmymRKXhksUR7AobkzckmLzfHbU/XXedB9E6MK30yTLEnCOf
+            wwtkZh2ZhsBYuC9i5p2WBIch25S3xVdlpk5PWAH1g3I5fYdyRnrYMja5MXcvJNcg
+            zM7D9xOygGnppYRCGul3zS3O7Ueac4Mc3r6e/Jv2Xig9yHdOsT77t7kCgYEA5TS0
+            o0aKYZ/HtrXB4L49lTCntGAv+RANH4u2pqPJ33qom6M8gTraqCkMf/Bbu0IWGWDo
+            IpnckCu3YDJKBIOy2uhIZJlX8VPspz4bjzHWda+xz+LaQvU1SHXQJO+Qjzk3hXp9
+            bjZpArnvX6lGnUxpzS+aCaAuwZAoTI0vg0AKo6UCgYEAin3TmEVRSHZFVq0cbDZl
+            0C8W8Wm90sZGsCPWSMVx0HFpXojdx67lJMn6ByxwQ0/IkQDNK6ocSiCkA7Iqh0jT
+            OT0D3aD1vDg8vW1bJvFf2DdNOeKyc2lNsgqddKvfbmjpR8jLpPMG6poYUb7kSKHr
+            HPutTuM8N4UbK3olr0X76ZkCgYEApJ+xamA8/hdD21A6m1AobSJQIbbAXhQQSOsR
+            Wijj0raHqZmZ2HvMFuG8z5t0V1AFDV9T+54lFAvCHr6f+RQafy486LxWtMeBfzGV
+            m8jA7zAs91JJT7RM++lagVzrqGMBJMawlltQGxwu+LddN5dtmmkpKua5Dl+bAjiZ
+            upxhx90CgYAUvZSWJj0W+Tw7I8EuxpdbCYqhJ0Qf+JZXfugwBPliA4YmrNTQwxlQ
+            iXSR4P+frtOc68x3reswgNZTSFob3bD+kEr5OqeSoLxeNo6GVa7gKlFkJkQ5wbp+
+            UB4NfApfH8pXJ+Fs5APa3bJ04jl/VYe1COrRnX37ZyW1xBXry8T4FQ==
+            -----END RSA PRIVATE KEY-----
+          certificate: |
+            -----BEGIN CERTIFICATE-----
+            MIICpDCCAYwCCQDmd22UFZF0wDANBgkqhkiG9w0BAQUFADASMRAwDgYDVQQDEwdr
+            dWJlLWNhMB4XDTE1MTEyODAwMzMyNloXDTE2MTEyNzAwMzMyNlowFjEUMBIGA1UE
+            AxMLa3ViZS13b3JrZXIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDb
+            dYT+1BkiVe6+QWTRDqhuU1K9RbWrCp+gcWbGUNAYGXLsZ0R6bd1pCGvzX3vysXO+
+            +sydkOmEHoHp7MAUn5Yved0sA3cfE37zljEjeE9X7PkoTZBahBzsARzUOVDH0+Jf
+            kU8N9A62C7D8Z4DqHc2s5JNJrjiRdrLl+jH7w2eMlqJLQeIWlTV5Q9HI/i3VGCI7
+            1pXG9B3DaXxdm4OMgzvaqsDSrKNOeGiZkaWjO9DZfkljtmZXgh7UekYxGQHysrZU
+            ycTvsdX7JHnBEiGcEjmyjtoeWWZNmsjfkx65EJ5kkJ5zPQu8Eaj4aPN3x9tWTPEf
+            CBcnZM7uJh0a8cZLcjU9AgMBAAEwDQYJKoZIhvcNAQEFBQADggEBAFBUwaoSypAj
+            Wyk8nn4XxoYeTS4Hpb79v7Z976NMFcd80zyowaCX0tuE45y2p5nl3EYlgflnugTk
+            hMQphSY/f6IAJJkFJLOMKfSDcFa6+jeGfWe/pgMwVDjjmxxurpmdV80hvFZ2QYW0
+            m5dykoFe4NrdqkzAy+K1WtC6pmFGdrncWV7F0S3mPtnhBVbuzay8LpIW17YYQlep
+            iiVdSZ82OmhRBwtOqtdAtFz1GwvSTeIFBbRzC02XODkpd0ZDYce8UrG8z8DoipWV
+            qB6pGc2gCNnhGMcbmO533mKAiwyTRpX5HccwVpewusrc9/DgVnCIZJx2FXAdF9Cf
+            rI/17ajYG8s=
+            -----END CERTIFICATE-----
+      master_host: 10.244.5.2
