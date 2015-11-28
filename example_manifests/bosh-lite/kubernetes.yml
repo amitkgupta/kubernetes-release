@@ -1,0 +1,79 @@
+director_uuid: 55c7e258-ea60-4342-a314-a704179d6760
+
+name: kubernetes
+
+releases:
+- name: kubernetes
+  version: latest
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-180000
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 1000-180000
+
+compilation:
+  cloud_properties: {}
+  network: compilation
+  reuse_compilation_vms: true
+  workers: 3
+
+networks:
+- name: kubernetes_master
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.5.0/30
+    reserved:
+    - 10.244.5.1
+    static:
+    - 10.244.5.2
+- name: compilation
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.6.0/30
+    reserved:
+    - 10.244.6.1
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.6.4/30
+    reserved:
+    - 10.244.6.5
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.6.8/30
+    reserved:
+    - 10.244.6.9
+    static: []
+  type: manual
+
+resource_pools:
+- cloud_properties: {}
+  name: kubernetes_master
+  network: kubernetes_master
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+
+jobs:
+- instances: 1
+  name: master
+  networks:
+  - name: kubernetes_master
+    static_ips:
+    - 10.244.5.2
+  resource_pool: kubernetes_master
+  templates:
+  - name: flannel
+    release: kubernetes
+
+properties:
+  kubernetes:
+    flannel:
+      etcd:
+        endpoints: ["http://10.244.4.2:4001"]
+      pod_network: 10.244.7.0/24
