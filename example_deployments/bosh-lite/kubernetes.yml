@@ -126,6 +126,13 @@ jobs:
     release: kubernetes
   - name: kubelet_master
     release: kubernetes
+  properties:
+    kubernetes:
+      kubelet_master:
+        startup_timeout_in_seconds: 30
+  update:
+    canary_watch_time: 1000-45000
+    update_watch_time: 1000-45000
 - name: worker
   instances: 1
   networks:
@@ -202,7 +209,7 @@ properties:
             sYuB7tD2LnDijd4an9MdvSDGaNdYcDjUfva06ifLQ5QWZ2MbeVGuA93Y3OeWiM7C
             ktYXE5icRu0FTwDw/01BL0WMlBAYIYjvowQQqNKN+t5UsNnPc8TqBxkrAZu4cZJB
             lq7/YZwLplScTNB6nswclOsCgYEAvaWYgoG8gwXSdCnOKNpY9l0pnY6dzmLFjlWU
-            vOfWA3elyTy9KBw1eMzQGdrvhU3XM+Nx+aK5AZI4e61ace3f37e8afd3f69771442212672032eb5f4nwBTG0EjzsxGkKefBPBu15
+            vOfWA3elyTy9KBw1eMzQGdrvhU3XM+Nx+aK5AZIxXxnwBTG0EjzsxGkKefBPBu15
             lIg3xHUWTN2ir1m3K8fw+smeB/SszBogfVPH5gist9Rbmzavlrok3OMQykgOQKSc
             nxlfPTsCgYAZPdjC08pUN+5RXPEQ83vvZXO5f4nTwq/qawPUeVPGt1eVwpzEz+fU
             Ca0juUWDICwZ6RfI+1c022H34DUcHHNmnYfiHn/vVtEFViHjdGYpeIWkkpwqDaKz
