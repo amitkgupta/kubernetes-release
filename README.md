@@ -6,3 +6,6 @@ This project is an experiment to see if open source kubernetes and supporting so
 
 - find a better solution than `fake-git`
 - see if flannel can be run not as root
+- the rest of [this](https://coreos.com/kubernetes/docs/latest/deploy-master.html)
+- then [this](https://coreos.com/kubernetes/docs/latest/deploy-workers.html)
+- then [this](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html)
