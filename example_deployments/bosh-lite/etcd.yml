@@ -1,0 +1,81 @@
+director_uuid: 55c7e258-ea60-4342-a314-a704179d6760
+
+name: etcd
+
+releases:
+- name: etcd
+  version: latest
+
+networks:
+- name: etcd
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.4.0/30
+    reserved:
+    - 10.244.4.1
+    static:
+    - 10.244.4.2
+- name: compilation
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.6.0/30
+    reserved:
+    - 10.244.6.1
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.6.4/30
+    reserved:
+    - 10.244.6.5
+    static: []
+  - cloud_properties:
+      name: random
+    range: 10.244.6.8/30
+    reserved:
+    - 10.244.6.9
+    static: []
+  type: manual
+
+compilation:
+  cloud_properties: {}
+  network: compilation
+  reuse_compilation_vms: true
+  workers: 3
+
+resource_pools:
+- cloud_properties: {}
+  name: etcd
+  network: etcd
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-180000
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 1000-180000
+
+jobs:
+- instances: 1
+  name: etcd
+  networks:
+  - name: etcd
+    static_ips:
+    - 10.244.4.2
+  persistent_disk: 1024
+  resource_pool: etcd
+  templates:
+  - name: etcd
+    release: etcd
+
+properties:
+  etcd:
+    machines:
+    - 10.244.4.2
+    peer_require_ssl: false
+    require_ssl: false
+    server_cert: null

@@ -26,3 +26,5 @@ blobs
 /pkg/
 .hg
 .bzr
+example_deployments/**/*.pem
+example_deployments/**/bosh-lite-aws-credentials

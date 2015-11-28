@@ -6,19 +6,6 @@ releases:
 - name: kubernetes
   version: latest
 
-update:
-  canaries: 1
-  canary_watch_time: 1000-180000
-  max_in_flight: 1
-  serial: true
-  update_watch_time: 1000-180000
-
-compilation:
-  cloud_properties: {}
-  network: compilation
-  reuse_compilation_vms: true
-  workers: 3
-
 networks:
 - name: kubernetes_master
   subnets:
@@ -51,6 +38,12 @@ networks:
     static: []
   type: manual
 
+compilation:
+  cloud_properties: {}
+  network: compilation
+  reuse_compilation_vms: true
+  workers: 3
+
 resource_pools:
 - cloud_properties: {}
   name: kubernetes_master
@@ -58,6 +51,13 @@ resource_pools:
   stemcell:
     name: bosh-warden-boshlite-ubuntu-trusty-go_agent
     version: latest
+
+update:
+  canaries: 1
+  canary_watch_time: 1000-180000
+  max_in_flight: 1
+  serial: true
+  update_watch_time: 1000-180000
 
 jobs:
 - instances: 1

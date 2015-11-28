@@ -1,0 +1,5 @@
+export BOSH_LITE_KEYPAIR=nafpigos
+export BOSH_LITE_NAME="BOSH-Lite for kubernetes"
+export BOSH_LITE_SECURITY_GROUP=sg-4e2d6328
+export BOSH_LITE_PRIVATE_KEY="~/workspace/kubernetes-release/example_deployments/bosh-lite/nafpigos.pem"
+export BOSH_LITE_SUBNET_ID=subnet-44fe4d79
