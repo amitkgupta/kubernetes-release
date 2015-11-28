@@ -1,0 +1,67 @@
+<%
+  def public_ip
+    networks = spec.networks.marshal_dump
+
+    _, network = networks.find do |_name, network_spec|
+      network_spec.default
+    end
+
+    if !network
+      _, network = networks.first
+    end
+
+    if !network
+      raise "Could not determine IP via network spec: #{networks}"
+    end
+
+    network.ip
+  end
+
+  etcd_endpoints = p("kubernetes.kubelet_master.etcd.endpoints").join(",")
+%>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-podmaster
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: scheduler-elector
+    image: gcr.io/google_containers/podmaster:1.1
+    command:
+    - /podmaster
+    - --etcd-servers=<%= etcd_endpoints %>
+    - --key=scheduler
+    - --whoami=<%= public_ip %>
+    - --source-file=/src/manifests/kube-scheduler.yaml
+    - --dest-file=/dst/manifests/kube-scheduler.yaml
+    volumeMounts:
+    - mountPath: /src/manifests
+      name: manifest-src
+      readOnly: true
+    - mountPath: /dst/manifests
+      name: manifest-dst
+  - name: controller-manager-elector
+    image: gcr.io/google_containers/podmaster:1.1
+    command:
+    - /podmaster
+    - --etcd-servers=<%= etcd_endpoints %>
+    - --key=controller
+    - --whoami=<%= public_ip %>
+    - --source-file=/src/manifests/kube-controller-manager.yaml
+    - --dest-file=/dst/manifests/kube-controller-manager.yaml
+    terminationMessagePath: /dev/termination-log
+    volumeMounts:
+    - mountPath: /src/manifests
+      name: manifest-src
+      readOnly: true
+    - mountPath: /dst/manifests
+      name: manifest-dst
+  volumes:
+  - hostPath:
+      path: <%= p("kubernetes.kubelet_master.pod_manifest_dirs.podmaster_src") %>
+    name: manifest-src
+  - hostPath:
+      path: <%= p("kubernetes.kubelet_master.pod_manifest_dirs.bootstrap") %>
+    name: manifest-dst

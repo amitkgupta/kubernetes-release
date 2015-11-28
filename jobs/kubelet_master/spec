@@ -1,0 +1,68 @@
+name: kubelet_master
+
+packages:
+  - kubelet
+
+templates:
+  kubelet_master_ctl.erb: "bin/kubelet_master_ctl"
+
+  kube-apiserver.yaml.erb: "etc/kubernetes/manifests/kube-apiserver.yaml"
+  kube-proxy.yaml.erb: "etc/kubernetes/manifests/kube-proxy.yaml"
+  kube-podmaster.yaml.erb: "etc/kubernetes/manifests/kube-podmaster.yaml"
+
+  kube-controller-manager.yaml.erb: "srv/kubernetes/manifests/kube-controller-manager.yaml"
+  kube-scheduler.yaml.erb: "srv/kubernetes/manifests/kube-scheduler.yaml"
+
+  ca.pem.erb: "etc/kubernetes/ssl/ca.pem"
+  apiserver.pem.erb: "etc/kubernetes/ssl/apiserver.pem"
+  apiserver-key.pem.erb: "etc/kubernetes/ssl/apiserver-key.pem"
+
+properties:
+  kubernetes.kubelet_master.startup_timeout_in_seconds:
+    description: |
+      Number of seconds to wait for the kubelet server to be running after launching
+      the process.
+    default: 30
+
+  kubernetes.kubelet_master.services.dns_ip:
+    description: |
+      The virtual IP address of the cluster DNS service. This IP must be in the
+      service IP range and cannot be the first IP in the range.
+    example: 10.244.8.2
+  kubernetes.kubelet_master.services.ip_range:
+    description: |
+      The CIDR network to use for service cluster virtual IPs. Each service will be
+      assigned a cluster IP out of this range. This must not overlap with any IP
+      ranges assigned to the pod IP range, or other existing network infrastructure.
+      Routing to these VIPs is handled by a local kube-proxy service to each node,
+      and are not required to be routable between nodes.
+    example: 10.244.8.0/24
+
+  kubernetes.kubelet_master.pod_manifest_dirs.bootstrap:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Location of pad manifest for bootstrap pods, namely API server, proxy, and
+      Podmaster. Also used as "manifest-destination" directory for Podmaster.
+    default: /var/vcap/jobs/kubelet_master/etc/kubernetes/manifests
+  kubernetes.kubelet_master.pod_manifest_dirs.podmaster_src:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Used as "manifest-source" directory for Podmaster.
+    default: /var/vcap/jobs/kubelet_master/srv/kubernetes/manifests
+
+  kubernetes.kubelet_master.ssl_dir:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Location of TLS assets.
+    default: /var/vcap/jobs/kubelet_master/etc/kubernetes/ssl
+
+  kubernetes.kubelet_master.ssl.ca:
+    description: PEM encoded root CA that was used to sign the rest of the certificates.
+  kubernetes.kubelet_master.ssl.api_server.signing_key:
+    description: PEM encoded private RSA key that was used to create API server CSR.
+  kubernetes.kubelet_master.ssl.api_server.certificate:
+    description: PEM encoded API server certificate.
+
+  kubernetes.kubelet_master.etcd.endpoints:
+    description: Array of client addresses of etcd servers
+    example: ["http://10.244.4.2:4001", "http://10.244.4.6:4001"]

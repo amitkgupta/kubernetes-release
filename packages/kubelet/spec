@@ -1,0 +1,5 @@
+---
+name: kubelet
+
+files:
+  - kubelet/kubelet-1.1.2
