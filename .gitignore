@@ -27,4 +27,6 @@ blobs
 .hg
 .bzr
 example_deployments/**/*.pem
+!example_deployments/bosh-lite/*.pem
+example_deployments/bosh-lite/nafpigos.pem
 example_deployments/**/bosh-lite-aws-credentials
