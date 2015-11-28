@@ -1,0 +1,7 @@
+set -e -x
+
+if [ "$1" = "describe" ] && [ "$2" = "--dirty" ]; then
+  echo "v0.5.5"
+else
+  exit 1
+fi

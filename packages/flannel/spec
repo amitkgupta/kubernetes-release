@@ -1,0 +1,9 @@
+---
+name: flannel
+
+dependencies:
+  - golang1.5
+  - fake-git
+
+files:
+  - github.com/coreos/flannel/**/*

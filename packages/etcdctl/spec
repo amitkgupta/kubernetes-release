@@ -1,0 +1,8 @@
+---
+name: etcdctl
+
+dependencies:
+  - golang1.5
+
+files:
+  - github.com/coreos/etcd/**/*

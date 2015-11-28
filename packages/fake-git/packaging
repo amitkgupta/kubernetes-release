@@ -1,0 +1,4 @@
+set -e
+
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+cp fake-git/git ${BOSH_INSTALL_TARGET}/bin/git

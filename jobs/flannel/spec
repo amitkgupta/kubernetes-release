@@ -1,0 +1,21 @@
+name: flannel
+
+packages:
+  - golang1.5
+  - flannel
+  - kubernetes-common
+  - etcdctl
+
+templates:
+  flannel_ctl.erb: bin/flannel_ctl
+
+properties:
+  kubernetes.flannel.etcd.endpoints:
+    description: Array of client addresses of etcd servers
+    example: ["http://10.244.4.2:4001", "http://10.244.4.6:4001"]
+  kubernetes.flannel.pod_network:
+    description: |
+      The CIDR network to use for pod IPs. Each pod launched in the cluster will be assigned an IP out of this range.
+      This network must be routable between all nodes in the cluster. In a default installation, the flannel overlay
+      network will provide routing to this network.
+    example: 10.244.7.0/24

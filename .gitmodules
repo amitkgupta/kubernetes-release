@@ -1,0 +1,6 @@
+[submodule "src/github.com/coreos/flannel"]
+	path = src/github.com/coreos/flannel
+	url = https://github.com/coreos/flannel
+[submodule "src/github.com/coreos/etcd"]
+	path = src/github.com/coreos/etcd
+	url = https://github.com/coreos/etcd

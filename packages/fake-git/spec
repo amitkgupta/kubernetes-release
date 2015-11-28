@@ -1,0 +1,5 @@
+---
+name: fake-git
+
+files:
+  - fake-git/git
