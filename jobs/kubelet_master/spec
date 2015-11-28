@@ -22,7 +22,6 @@ properties:
     description: |
       Number of seconds to wait for the kubelet server to be running after launching
       the process.
-    default: 30
 
   kubernetes.kubelet_master.services.dns_ip:
     description: |
