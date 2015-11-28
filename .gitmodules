@@ -4,3 +4,6 @@
 [submodule "src/github.com/coreos/etcd"]
 	path = src/github.com/coreos/etcd
 	url = https://github.com/coreos/etcd
+[submodule "src/github.com/tianon/cgroupfs-mount"]
+	path = src/github.com/tianon/cgroupfs-mount
+	url = https://github.com/tianon/cgroupfs-mount

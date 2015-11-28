@@ -1,0 +1,18 @@
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Extract XZ package
+echo "Extracting XZ 5.2.2..."
+tar xzvf xz/xz-5.2.2.tar.gz
+if [[ $? != 0 ]] ; then
+  echo "Failed extracting XZ 5.2.2"
+  exit 1
+fi
+
+# Build XZ package
+echo "Building XZ 5.2.2..."
+pushd xz-5.2.2
+  ./configure --prefix=${BOSH_INSTALL_TARGET}
+  make
+  make install
+popd

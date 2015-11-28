@@ -1,0 +1,5 @@
+---
+name: xz
+
+files:
+  - xz/xz-5.2.2.tar.gz

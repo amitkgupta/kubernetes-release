@@ -1,0 +1,14 @@
+name: docker
+
+packages:
+  - cgroupfs-mount
+  - docker
+  - git
+  - iptables
+  - xz
+  - kubernetes-common
+
+templates:
+  docker_ctl.erb: bin/docker_ctl
+
+properties: {}

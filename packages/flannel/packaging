@@ -3,7 +3,7 @@ set -e
 export GOROOT=$(readlink -nf /var/vcap/packages/golang1.5)
 
 export PATH=${GOROOT}/bin:${PATH}
-export PATH=/var/cap/packages/fake-git/bin:${PATH}
+export PATH=/var/cap/packages/git/bin:${PATH}
 
 mkdir -p ${BOSH_INSTALL_TARGET}/bin
 

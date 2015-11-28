@@ -1,0 +1,6 @@
+check process docker
+  with pidfile /var/vcap/sys/run/docker/docker.pid
+  start program "/var/vcap/jobs/docker/bin/docker_ctl start"
+  stop program "/var/vcap/jobs/docker/bin/docker_ctl stop"
+  group vcap
+  depends on flannel

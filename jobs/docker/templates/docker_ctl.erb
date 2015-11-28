@@ -1,0 +1,43 @@
+#!/bin/bash
+
+RUN_DIR=/var/vcap/sys/run/docker
+LOG_DIR=/var/vcap/sys/log/docker
+PIDFILE=$RUN_DIR/docker.pid
+
+source /var/vcap/packages/kubernetes-common/utils.sh
+
+case $1 in
+
+  start)
+    pid_guard $PIDFILE "docker"
+
+    mkdir -p $RUN_DIR
+    mkdir -p $LOG_DIR
+
+    chown -R vcap:vcap $RUN_DIR
+    chown -R vcap:vcap $LOG_DIR
+
+    export PATH=/var/vcap/packages/git/bin:$PATH
+    export PATH=/var/vcap/packages/iptables/bin:$PATH
+    export PATH=/var/vcap/packages/xz/bin:$PATH
+
+    /var/vcap/packages/cgroupfs-mount/bin/cgroupfs-mount
+
+    echo $$ > $PIDFILE
+
+    exec /var/vcap/packages/docker/bin/docker daemon
+
+    ;;
+
+  stop)
+    kill_and_wait $PIDFILE
+
+    ;;
+
+  *)
+    echo "Usage: docker {start|stop}"
+
+    ;;
+
+esac
+

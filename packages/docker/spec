@@ -1,0 +1,5 @@
+---
+name: docker
+
+files:
+  - docker/docker-1.9.1.tgz

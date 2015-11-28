@@ -1,0 +1,2 @@
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+cp github.com/tianon/cgroupfs-mount/cgroupfs-mount ${BOSH_INSTALL_TARGET}/bin

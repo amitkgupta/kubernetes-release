@@ -3,10 +3,21 @@ director_uuid: 55c7e258-ea60-4342-a314-a704179d6760
 name: kubernetes
 
 releases:
+- name: etcd
+  version: latest
 - name: kubernetes
   version: latest
 
 networks:
+- name: etcd
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.4.0/30
+    reserved:
+    - 10.244.4.1
+    static:
+    - 10.244.4.2
 - name: kubernetes_master
   subnets:
   - cloud_properties:
@@ -46,6 +57,12 @@ compilation:
 
 resource_pools:
 - cloud_properties: {}
+  name: etcd
+  network: etcd
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+- cloud_properties: {}
   name: kubernetes_master
   network: kubernetes_master
   stemcell:
@@ -54,12 +71,23 @@ resource_pools:
 
 update:
   canaries: 1
-  canary_watch_time: 1000-180000
   max_in_flight: 1
   serial: true
-  update_watch_time: 1000-180000
+  canary_watch_time: 1000-30000
+  update_watch_time: 1000-30000
 
 jobs:
+- instances: 1
+  name: etcd
+  networks:
+  - name: etcd
+    static_ips:
+    - 10.244.4.2
+  persistent_disk: 1024
+  resource_pool: etcd
+  templates:
+  - name: etcd
+    release: etcd
 - instances: 1
   name: master
   networks:
@@ -70,8 +98,15 @@ jobs:
   templates:
   - name: flannel
     release: kubernetes
+  - name: docker
+    release: kubernetes
 
 properties:
+  etcd:
+    machines:
+    - 10.244.4.2
+    peer_require_ssl: false
+    require_ssl: false
   kubernetes:
     flannel:
       etcd:

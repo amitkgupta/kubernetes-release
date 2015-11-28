@@ -1,0 +1,21 @@
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Detect # of CPUs so make jobs can be parallelized
+CPUS=`grep -c ^processor /proc/cpuinfo`
+
+# Extract Git package
+echo "Extracting Git 2.4.6..."
+tar xzvf git/git-2.4.6.tar.gz
+if [[ $? != 0 ]] ; then
+  echo "Failed extracting Git 2.4.6"
+  exit 1
+fi
+
+# Build Git package
+echo "Building Git 2.4.6..."
+pushd git-2.4.6
+  ./configure --prefix=${BOSH_INSTALL_TARGET}
+  NO_TCLTK=yes make -j${CPUS}
+  NO_TCLTK=yes make install
+popd

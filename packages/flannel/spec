@@ -3,7 +3,7 @@ name: flannel
 
 dependencies:
   - golang1.5
-  - fake-git
+  - git
 
 files:
   - github.com/coreos/flannel/**/*

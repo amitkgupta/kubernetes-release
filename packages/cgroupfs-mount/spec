@@ -1,0 +1,5 @@
+---
+name: cgroupfs-mount
+
+files:
+  - github.com/tianon/cgroupfs-mount/cgroupfs-mount
