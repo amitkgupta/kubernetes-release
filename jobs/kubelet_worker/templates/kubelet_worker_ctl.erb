@@ -20,16 +20,18 @@
   end
 %>
 
-RUN_DIR=/var/vcap/sys/run/kubelet_master
-LOG_DIR=/var/vcap/sys/log/kubelet_master
-PIDFILE=$RUN_DIR/kubelet_master.pid
+RUN_DIR=/var/vcap/sys/run/kubelet_worker
+LOG_DIR=/var/vcap/sys/log/kubelet_worker
+PIDFILE=$RUN_DIR/kubelet_worker.pid
 
 source /var/vcap/packages/kubernetes-common/utils.sh
 
 case $1 in
 
   start)
-    pid_guard $PIDFILE "kubelet_master"
+    chmod 600 <%= p("kubernetes.kubelet_worker.ssl_dir") %>/worker-key.pem
+
+    pid_guard $PIDFILE "kubelet_worker"
 
     mkdir -p $RUN_DIR
     mkdir -p $LOG_DIR
@@ -44,7 +46,7 @@ case $1 in
       --hostname-override=<%= public_ip %> \
       --cluster_dns=<%= p("kubernetes.kubelet_worker.services.dns_ip") %> \
       --cluster_domain=cluster.local \
-      --kubeconfig=<%= p("kubernetes.kubelet_worker.config_dir") %>/worker-kubeconfig.yaml \
+      --kubeconfig=<%= p("kubernetes.kubelet_worker.config_dir") %>/worker-kubelet-config.yaml \
       --tls-cert-file=<%= p("kubernetes.kubelet_worker.ssl_dir") %>/worker.pem \
       --tls-private-key-file=<%= p("kubernetes.kubelet_worker.ssl_dir") %>/worker-key.pem \
       --cadvisor-port=0

@@ -8,7 +8,8 @@ templates:
 
   kube-proxy.yaml.erb: "etc/kubernetes/manifests/kube-proxy.yaml"
 
-  worker-kubeconfig.yaml.erb: "etc/kubernetes/worker-kubeconfig.yaml"
+  worker-kubelet-config.yaml.erb: "etc/kubernetes/worker-kubelet-config.yaml"
+  worker-proxy-config.yaml.erb: "etc/kubernetes/worker-proxy-config.yaml"
 
   ca.pem.erb: "etc/kubernetes/ssl/ca.pem"
   worker.pem.erb: "etc/kubernetes/ssl/worker.pem"
@@ -40,7 +41,7 @@ properties:
   kubernetes.kubelet_worker.config_dir:
     description: |
       DO NOT CHANGE THIS VALUE!
-      Location of worker config file.
+      Location of worker config files.
     default: /var/vcap/jobs/kubelet_worker/etc/kubernetes
 
   kubernetes.kubelet_worker.ssl.ca:

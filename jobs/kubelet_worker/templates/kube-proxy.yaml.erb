@@ -30,7 +30,7 @@ spec:
         path: "/usr/share/ca-certificates"
     - name: "kubeconfig"
       hostPath:
-        path: "<%= p("kubernetes.kubelet_worker.config_dir") %>/worker-kubeconfig.yaml"
+        path: "<%= p("kubernetes.kubelet_worker.config_dir") %>/worker-proxy-config.yaml"
     - name: "etc-kube-ssl"
       hostPath:
         path: "<%= p("kubernetes.kubelet_worker.ssl_dir") %>"
