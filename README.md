@@ -4,12 +4,10 @@ This project is an experiment to see if open source kubernetes and supporting so
 
 #### TODO:
 
-- user [this](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html) and [this](https://coreos.com/kubernetes/docs/latest/deploy-addons.html) to set up the DNS stuff
-- add LICENSE, etc.
-- add final blobstore
+- use [this](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html) and [this](https://coreos.com/kubernetes/docs/latest/deploy-addons.html) to set up the DNS stuff as an errand
+- add LICENSE and NOTICE
 - why does master not start up right away?
-- why everything complains about 10.244.5.2 (master IP)?
-- is any of it resilient to restarts?
-- how much stuff is in /var/lib, etc?
-- add dns addon via kubectl errand
+- check all CTL logs for errors/warnings of things not actually working correctly
+- is any of it resilient to recreates?
+- can /var, especially /var/lib for state -- if it {needs,doesn't need} to persist, see if it can be forced into /var/vcap/{store,data}
 - see if everything can be run not as root
