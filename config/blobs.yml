@@ -1,0 +1,25 @@
+---
+docker/docker-1.9.1.tgz:
+  object_id: a420ea8c-c978-450f-908a-f8ea63992846
+  sha: 8824f8a67fbe55d1e52dcbebc74219ba8090006e
+  size: 8386688
+git/git-2.4.6.tar.gz:
+  object_id: 35e92edf-e909-41d1-935b-5cc93739e149
+  sha: 230cb8b664fe47c838e199663f55dc882a3b9773
+  size: 5349900
+golang/go1.5.1.linux-amd64.tar.gz:
+  object_id: 7673b7cb-8855-4629-9c5c-ee4592741f29
+  sha: 46eecd290d8803887dec718c691cc243f2175fe0
+  size: 77875767
+iptables/iptables-1.4.21.tar.bz2:
+  object_id: 9bae4536-79f7-440a-bdea-d315197ff50f
+  sha: 85d4160537546a23a7e42bc26dd7ee62a0ede4c8
+  size: 547439
+kubelet/kubelet-1.1.2:
+  object_id: 96ed4e00-22c0-4ced-bff0-ad6ab6c705bf
+  sha: f1bfa23150b3aadce7c1797669955e66ad961779
+  size: 40685272
+xz/xz-5.2.2.tar.gz:
+  object_id: c3cf0463-0911-4cee-a066-5607356ec002
+  sha: 14663612422ab61386673be78fbb2556f50a1f08
+  size: 1464228
