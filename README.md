@@ -4,9 +4,10 @@ This project is an experiment to see if open source kubernetes and supporting so
 
 #### TODO:
 
-- the rest of [this](https://coreos.com/kubernetes/docs/latest/deploy-master.html)
-- then [this](https://coreos.com/kubernetes/docs/latest/deploy-workers.html)
-- then [this](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html)
+- user [this](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html) and [this](https://coreos.com/kubernetes/docs/latest/deploy-addons.html) to set up the DNS stuff
 - add LICENSE, etc.
 - add final blobstore
-- see if flannel can be run not as root
+- why does master not start up right away?
+- why everything complains about 10.244.5.2 (master IP)?
+- is any of it resilient to restarts?
+- see if everything can be run not as root
