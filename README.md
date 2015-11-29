@@ -9,5 +9,5 @@ This project is an experiment to see if open source kubernetes and supporting so
 - why does master not start up right away?
 - check all CTL logs for errors/warnings of things not actually working correctly
 - is any of it resilient to recreates?
-- can /var, especially /var/lib for state -- if it {needs,doesn't need} to persist, see if it can be forced into /var/vcap/{store,data}
+- scan /var, especially /var/lib for state -- if it {needs,doesn't need} to persist, see if it can be forced into /var/vcap/{store,data}
 - see if everything can be run not as root
