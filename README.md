@@ -7,10 +7,6 @@ It follows the [Manual Installation Guide](https://coreos.com/kubernetes/docs/la
 #### TODO:
 
 - use [this](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html) and [this](https://coreos.com/kubernetes/docs/latest/deploy-addons.html) to set up the DNS stuff as an errand
-- why does master not start up right away?
-- check all CTL logs for errors/warnings of things not actually working correctly
-- is any of it resilient to recreates?
-- scan /var, especially /var/lib for state -- if it {needs,doesn't need} to persist, see if it can be forced into /var/vcap/{store,data}
 - see if everything can be run not as root
 
 #### Known Issues
