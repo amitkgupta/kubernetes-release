@@ -159,12 +159,12 @@ properties:
     flannel:
       etcd:
         endpoints: ["http://10.244.4.2:4001"]
-      pod_network: 10.244.8.0/24
+      pod_network: 10.244.32.0/19
 
     kubelet_master:
       services:
-        dns_ip: 10.244.9.2
-        ip_range: 10.244.9.0/24
+        dns_ip: 10.244.64.2
+        ip_range: 10.244.64.0/19
       ssl:
         ca: |
           -----BEGIN CERTIFICATE-----
@@ -240,7 +240,7 @@ properties:
 
     kubelet_worker:
       services:
-        dns_ip: 10.244.9.2
+        dns_ip: 10.244.64.2
       ssl:
         ca: |
           -----BEGIN CERTIFICATE-----
