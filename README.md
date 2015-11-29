@@ -1,14 +1,14 @@
-## kubernetes-release
+# kubernetes-release
 
 This project is an experiment to see if open source [Kubernetes](http://kubernetes.io/) and supporting software from CoreOS (e.g. flannel) can be deployed and managed in a [production-suitable manner](http://bosh.io/), not just [hacked together](https://github.com/kubernetes/kubernetes/tree/master/cluster).
 
 It is based on the [Manual Installation Guide](https://coreos.com/kubernetes/docs/latest/getting-started.html) for deploying Kubernetes on CoreOS, but does not use CoreOS.
 
-### Disclaimer
+## Disclaimer
 
 This is not presently a production-ready release. This is a work in progress. It is suitable for experimentation and may become unsupported in the future.
 
-### Usage
+## Usage
 
 This project packages up Kubernetes as a BOSH release, to be deployed in any configuration, on several possible supported IaaSes by a BOSH director.
 
@@ -32,9 +32,9 @@ For more on BOSH, visit [bosh.io](http://bosh.io/) and check out [the docs](http
   * If deploying to BOSH-Lite, you can mostly crib off the [BOSH-Lite example manifest](example_deployments/bosh-lite/kubernetes.yml).
 1. Run `bosh -d ${PATH_TO_MANIFEST} deploy`.
 
-### Known Issues
+## Known Issues
 
-**"Error updating node status" in `kubelet_master` logs**:
+#### "Error updating node status" in `kubelet_master` logs
 
 In `kubelet_master` error logs there appears to be a lot of the following type of output:
 
@@ -51,19 +51,19 @@ This is likely a manifestation of the issue mentioned [here](https://coreos.com/
 
 > Note that the kubelet running on a master node may log repeated attempts to post its status to the API server. These warnings are expected behavior and can be ignored.
 
-**"Failed to acquire subnet: out of subnets" in `flannel` logs**:
+#### "Failed to acquire subnet: out of subnets" in `flannel` logs
 
 It appears that if you provide a CIDR range for the `pod_network` that's smaller than /23 (or maybe even smaller than /22), `flannel` will compute the wrong range.
 
 See [this pull request](https://github.com/coreos/flannel/pull/378).
 
-**Docker puts stuff in `/var/run/docker/netns` and `/var/lib/docker/network`**:
+#### Docker puts stuff in `/var/run/docker/netns` and `/var/lib/docker/network`
 
 There doesn't seem to be a way to tell the `daemon` command to use different directories, like you can for `--graph` and `--execroot`.
 
 See [`daemon` command documentation](https://docs.docker.com/engine/reference/commandline/daemon/).
 
-### Contributing
+## Contributing
 
 **Everyone** is encouraged to help improve this project.
 
