@@ -27,7 +27,7 @@ properties:
     description: |
       The virtual IP address of the cluster DNS service. This IP must be in the
       service IP range and cannot be the first IP in the range.
-    example: 10.244.9.2
+    example: 10.244.64.2
   kubernetes.kubelet_master.services.ip_range:
     description: |
       The CIDR network to use for service cluster virtual IPs. Each service will be
@@ -35,7 +35,7 @@ properties:
       ranges assigned to the pod IP range, or other existing network infrastructure.
       Routing to these VIPs is handled by a local kube-proxy service to each node,
       and are not required to be routable between nodes.
-    example: 10.244.9.0/24
+    example: 10.244.64.0/19
 
   kubernetes.kubelet_master.pod_manifest_dirs.bootstrap:
     description: |

@@ -26,7 +26,7 @@ properties:
     description: |
       The virtual IP address of the cluster DNS service. This IP must be in the
       service IP range and cannot be the first IP in the range.
-    example: 10.244.9.2
+    example: 10.244.64.2
 
   kubernetes.kubelet_worker.pod_manifest_dir:
     description: |

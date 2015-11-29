@@ -18,4 +18,4 @@ properties:
       The CIDR network to use for pod IPs. Each pod launched in the cluster will be assigned an IP out of this range.
       This network must be routable between all nodes in the cluster. In a default installation, the flannel overlay
       network will provide routing to this network.
-    example: 10.244.8.0/24
+    example: 10.244.32.0/19
