@@ -1,0 +1,44 @@
+---
+name: deploy-dns-add-on
+
+description: "This errand deploys the DNS add-on to the Kubernetes cluster. See https://coreos.com/kubernetes/docs/latest/deploy-addons.html"
+
+packages:
+  - kubectl
+
+templates:
+  run.erb: bin/run
+  dns-addon.yml.erb: dns-addon.yml
+
+  ca.pem.erb: "etc/kubernetes/ssl/ca.pem"
+  admin.pem.erb: "etc/kubernetes/ssl/admin.pem"
+  admin-key.pem.erb: "etc/kubernetes/ssl/admin-key.pem"
+
+properties:
+  kubernetes.deploy_dns_add_on.deploy_timeout_in_seconds:
+    description: |
+      Number of seconds to spend trying to deploy the DNS Add-On.
+    default: 10
+
+  kubernetes.deploy_dns_add_on.services.dns_ip:
+    description: |
+      The virtual IP address of the cluster DNS service. This IP must be in the
+      service IP range and cannot be the first IP in the range.
+    example: 10.244.64.2
+
+  kubernetes.deploy_dns_add_on.ssl_dir:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Location of TLS assets.
+    default: /var/vcap/jobs/deploy-dns-add-on/etc/kubernetes/ssl
+
+  kubernetes.deploy_dns_add_on.ssl.ca:
+    description: PEM encoded root CA that was used to sign the rest of the certificates.
+  kubernetes.deploy_dns_add_on.ssl.admin.signing_key:
+    description: PEM encoded private RSA key that was used to create Admin CSR.
+  kubernetes.deploy_dns_add_on.ssl.admin.certificate:
+    description: PEM encoded Admin certificate.
+
+  kubernetes.deploy_dns_add_on.master_host:
+    description: IP of the kubelet master host
+    example: 10.244.5.2

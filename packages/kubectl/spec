@@ -1,0 +1,5 @@
+---
+name: kubectl
+
+files:
+  - kubectl/kubectl-1.0.6

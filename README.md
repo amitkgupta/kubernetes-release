@@ -31,6 +31,7 @@ For more on BOSH, visit [bosh.io](http://bosh.io/) and check out [the docs](http
 1. Create a [BOSH deployment manifest](https://bosh.io/docs/deployment-manifest.html) describing your desired deployment topology (e.g. number of etcd nodes, Kubernetes master nodes, and Kubernetes worker nodes); your manifest should reference this release, [etcd release](https://bosh.io/releases/github.com/cloudfoundry-incubator/etcd-release?all=1) and an IaaS-appropriate [BOSH stemcell](https://bosh.io/stemcells).
   * If deploying to BOSH-Lite, you can mostly crib off the [BOSH-Lite example manifest](example_deployments/bosh-lite/kubernetes.yml).
 1. Run `bosh -d ${PATH_TO_MANIFEST} deploy`.
+1. Deploy the DNS Add-On Service: `bosh -d ${PATH_TO_MANIFEST} run errand deploy_dns_add_on`.
 
 *Fun fact: If you use BOSH-Lite, you'll have a Vagrant VM, with nodes in the Kubernetes clusters running as [Garden](https://github.com/cloudfoundry-incubator/garden) Linux containers inside the VM, and those nodes will be running Docker inside the Linux containers, which will then run your pods inside Docker containers!*
 

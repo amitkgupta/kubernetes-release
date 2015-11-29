@@ -1,0 +1,2 @@
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+mv kubectl/kubectl-1.0.6 ${BOSH_INSTALL_TARGET}/bin/kubectl

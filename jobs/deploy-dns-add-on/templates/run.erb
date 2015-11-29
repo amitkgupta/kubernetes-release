@@ -1,0 +1,41 @@
+#!/bin/bash -l
+
+set -e -x -u
+
+LOG_DIR=/var/vcap/sys/log/deploy-dns-add-on
+mkdir -p ${LOG_DIR}
+rm -rf ${LOG_DIR}/*
+
+chmod +x /var/vcap/packages/kubectl/bin/kubectl
+export PATH=/var/vcap/packages/kubectl/bin:${PATH}
+
+kubectl config set-cluster default-cluster \
+  --server=https://<%= p("kubernetes.deploy_dns_add_on.master_host") %> \
+  --certificate-authority=<%= p("kubernetes.deploy_dns_add_on.ssl_dir") %>/ca.pem
+kubectl config set-credentials default-admin \
+  --certificate-authority=<%= p("kubernetes.deploy_dns_add_on.ssl_dir") %>/ca.pem \
+  --client-key=<%= p("kubernetes.deploy_dns_add_on.ssl_dir") %>/admin-key.pem \
+  --client-certificate=<%= p("kubernetes.deploy_dns_add_on.ssl_dir") %>/admin.pem
+kubectl config set-context default-system \
+  --cluster=default-cluster \
+  --user=default-admin
+kubectl config use-context default-system
+
+dns_add_on_running=false
+for i in $(seq <%= p("kubernetes.deploy_dns_add_on.deploy_timeout_in_seconds") %>); do
+  if kubectl get pods --namespace=kube-system | grep kube-dns-v9; then
+    dns_add_on_running=true
+    break
+  fi
+
+  kubectl create -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml
+  sleep 1
+done
+
+if ${dns_add_on_running}; then
+  echo "DNS Add-On running successfully"
+  exit 0
+else
+  echo "DNS Add-On failed to run successfully"
+  exit 1
+fi
