@@ -37,3 +37,9 @@ This is likely a manifestation of the issue mentioned [here](https://coreos.com/
 It appears that if you provide a CIDR range for the `pod_network` that's smaller than /23 (or maybe even smaller than /22), `flannel` will compute the wrong range.
 
 See [this pull request](https://github.com/coreos/flannel/pull/378).
+
+**Docker puts stuff in `/var/run/docker/netns` and `/var/lib/docker/network`**:
+
+There doesn't seem to be a way to tell the `daemon` command to use different directories, like you can for `--graph` and `--execroot`.
+
+See [`daemon` command documentation](https://docs.docker.com/engine/reference/commandline/daemon/).
