@@ -44,6 +44,7 @@ case $1 in
     mkdir -p $RUN_DIR
     mkdir -p $LOG_DIR
 
+    chmod +x /var/vcap/packages/kubelet/bin/kubelet
     /var/vcap/packages/kubelet/bin/kubelet \
         --api_servers=http://127.0.0.1:8080 \
         --register-node=false \

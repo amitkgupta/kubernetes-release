@@ -38,6 +38,7 @@ case $1 in
 
     echo $$ > $PIDFILE
 
+    chmod +x /var/vcap/packages/kubelet/bin/kubelet
     exec /var/vcap/packages/kubelet/bin/kubelet \
       --api_servers=https://<%= p("kubernetes.kubelet_worker.master_host") %> \
       --register-node=true \
