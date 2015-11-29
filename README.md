@@ -34,7 +34,7 @@ For more on BOSH, visit [bosh.io](http://bosh.io/) and check out [the docs](http
 
 ## Known Issues
 
-#### "Error updating node status" in `kubelet_master` logs
+**"Error updating node status" in `kubelet_master` logs**:
 
 In `kubelet_master` error logs there appears to be a lot of the following type of output:
 
@@ -51,13 +51,11 @@ This is likely a manifestation of the issue mentioned [here](https://coreos.com/
 
 > Note that the kubelet running on a master node may log repeated attempts to post its status to the API server. These warnings are expected behavior and can be ignored.
 
-#### "Failed to acquire subnet: out of subnets" in `flannel` logs
+**"Failed to acquire subnet: out of subnets" in `flannel` logs**:
 
-It appears that if you provide a CIDR range for the `pod_network` that's smaller than /23 (or maybe even smaller than /22), `flannel` will compute the wrong range.
+It's not clear if this is actually breaking anything, but simply providing a `pod_network` larger than `/23` should work around the issue.
 
-See [this pull request](https://github.com/coreos/flannel/pull/378).
-
-#### Docker puts stuff in `/var/run/docker/netns` and `/var/lib/docker/network`
+**Docker puts stuff in `/var/run/docker/netns` and `/var/lib/docker/network`**:
 
 There doesn't seem to be a way to tell the `daemon` command to use different directories, like you can for `--graph` and `--execroot`.
 
