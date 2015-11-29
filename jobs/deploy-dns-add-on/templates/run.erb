@@ -2,10 +2,6 @@
 
 set -e -x -u
 
-LOG_DIR=/var/vcap/sys/log/deploy-dns-add-on
-mkdir -p ${LOG_DIR}
-rm -rf ${LOG_DIR}/*
-
 chmod +x /var/vcap/packages/kubectl/bin/kubectl
 export PATH=/var/vcap/packages/kubectl/bin:${PATH}
 
