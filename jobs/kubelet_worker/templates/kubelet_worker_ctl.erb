@@ -50,7 +50,9 @@ case $1 in
       --kubeconfig=<%= p("kubernetes.kubelet_worker.config_dir") %>/worker-kubelet-config.yaml \
       --tls-cert-file=<%= p("kubernetes.kubelet_worker.ssl_dir") %>/worker.pem \
       --tls-private-key-file=<%= p("kubernetes.kubelet_worker.ssl_dir") %>/worker-key.pem \
-      --cadvisor-port=0
+      --cadvisor-port=0 \
+      2> >(tee -a $LOG_DIR/kubelet_worker.stderr.log | logger -p user.error -t kubelet_worker) \
+      1> >(tee -a $LOG_DIR/kubelet_worker.stdout.log | logger -p user.info -t kubelet_worker)
 
     ;;
 

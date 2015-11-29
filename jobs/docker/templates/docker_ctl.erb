@@ -6,6 +6,10 @@ PIDFILE=$RUN_DIR/docker.pid
 
 source /var/vcap/packages/kubernetes-common/utils.sh
 
+DOCKER_EXECDRIVER_ROOT=/var/vcap/data/docker/run/docker
+DOCKER_PIDFILE=/var/vcap/data/docker/run/docker.pid
+DOCKER_RUNTIME_ROOT=/var/vcap/data/docker/lib/docker
+
 case $1 in
 
   start)
@@ -23,9 +27,17 @@ case $1 in
 
     /var/vcap/packages/cgroupfs-mount/bin/cgroupfs-mount
 
+    mkdir -p ${DOCKER_EXECDRIVER_ROOT}
+    mkdir -p ${DOCKER_RUNTIME_ROOT}
+
     echo $$ > $PIDFILE
 
-    exec /var/vcap/packages/docker/bin/docker daemon
+    exec /var/vcap/packages/docker/bin/docker daemon \
+        --exec-root=${DOCKER_EXECDRIVER_ROOT} \
+        --graph=${DOCKER_RUNTIME_ROOT} \
+        --pidfile=${DOCKER_PIDFILE} \
+        2> >(tee -a $LOG_DIR/docker.stderr.log | logger -p user.error -t docker) \
+        1> >(tee -a $LOG_DIR/docker.stdout.log | logger -p user.info -t docker)
 
     ;;
 

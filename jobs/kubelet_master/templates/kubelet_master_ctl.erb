@@ -53,7 +53,9 @@ case $1 in
         --hostname-override=<%= public_ip %> \
         --cluster_dns=<%= p("kubernetes.kubelet_master.services.dns_ip") %> \
         --cluster_domain=cluster.local \
-        --cadvisor-port=0 &
+        --cadvisor-port=0 \
+        2> >(tee -a $LOG_DIR/kubelet_master.stderr.log | logger -p user.error -t kubelet_master) \
+        1> >(tee -a $LOG_DIR/kubelet_master.stdout.log | logger -p user.info -t kubelet_master) &
 
     kubelet_pid=$!
 

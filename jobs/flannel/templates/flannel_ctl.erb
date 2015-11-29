@@ -47,7 +47,9 @@ case $1 in
 
     exec /var/vcap/packages/flannel/bin/flanneld \
         --etcd-endpoints=<%= etcd_endpoints %> \
-        --public-ip=<%= public_ip %>
+        --public-ip=<%= public_ip %> \
+        2> >(tee -a $LOG_DIR/flannel.stderr.log | logger -p user.error -t flannel) \
+        1> >(tee -a $LOG_DIR/flannel.stdout.log | logger -p user.info -t flannel)
 
     ;;
 
