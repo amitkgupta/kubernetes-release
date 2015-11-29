@@ -1,32 +1,26 @@
+# Mac OS X
 .DS_Store
+
+# Hidden BOSH directories
 .blobs/
-blobs/
 .dev_builds/
-dev_releases/
-config/dev.yml
-config/private.yml
 .final_builds/jobs/**/*.tgz
 .final_builds/packages/**/*.tgz
+
+# Large BOSH artifacts
+blobs/
+dev_releases/
 releases/*.tgz
-src_alt
-output/
-tmp/
 releases/**/*.tgz
-dev_releases
-.blobs
-blobs
-.dev_builds
-.idea
-*.swp
-*~
-*#
-#*
-/*.tgz
+
+# Private BOSH credentials
+config/dev.yml
+config/private.yml
+
+# Private deployment credentials
+example_deployments/**/*.pem
+example_deployments/**/bosh-lite-aws-credentials
+
+# $GOPATH artifacts
 /bin/
 /pkg/
-.hg
-.bzr
-example_deployments/**/*.pem
-!example_deployments/bosh-lite/*.pem
-example_deployments/bosh-lite/nafpigos.pem
-example_deployments/**/bosh-lite-aws-credentials
