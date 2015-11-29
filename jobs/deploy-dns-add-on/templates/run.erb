@@ -17,21 +17,8 @@ kubectl config set-context default-system \
   --user=default-admin
 kubectl config use-context default-system
 
-dns_add_on_running=false
-for i in $(seq <%= p("kubernetes.deploy_dns_add_on.deploy_timeout_in_seconds") %>); do
-  if kubectl get pods --namespace=kube-system | grep kube-dns-v9; then
-    dns_add_on_running=true
-    break
-  fi
-
-  kubectl create -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml
-  sleep 1
-done
-
-if ${dns_add_on_running}; then
-  echo "DNS Add-On running successfully"
-  exit 0
+if kubectl get pods --namespace=kube-system | grep kube-dns-v9; then
+  kubectl replace -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml
 else
-  echo "DNS Add-On failed to run successfully"
-  exit 1
+  kubectl create -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml
 fi

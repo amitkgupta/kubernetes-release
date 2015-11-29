@@ -423,8 +423,6 @@ properties:
       master_host: 10.244.5.2
 
     deploy_example_guestbook:
-      services:
-        frontend_ip: 10.244.64.3
       ssl:
         ca: |
           -----BEGIN CERTIFICATE-----

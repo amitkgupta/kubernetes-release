@@ -15,11 +15,6 @@ templates:
   admin-key.pem.erb: "etc/kubernetes/ssl/admin-key.pem"
 
 properties:
-  kubernetes.deploy_example_guestbook.deploy_timeout_in_seconds:
-    description: |
-      Number of seconds to spend trying to deploy the example guestbook.
-    default: 30
-
   kubernetes.deploy_example_guestbook.services.frontend_ip:
     description: |
       The virtual IP address of the guestbook frontend service. This IP must be
@@ -39,7 +34,3 @@ properties:
     description: PEM encoded private RSA key that was used to create Admin CSR.
   kubernetes.deploy_example_guestbook.ssl.admin.certificate:
     description: PEM encoded Admin certificate.
-
-  kubernetes.deploy_example_guestbook.master_host:
-    description: IP of the kubelet master host
-    example: 10.244.5.2

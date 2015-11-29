@@ -51,27 +51,7 @@ It should be serving on port 80 at the cluster service `frontend_ip` you configu
 
 **Nothing is Externally Accessible in AWS BOSH-Lite Deployments**:
 
-If you `bosh ssh` onto a `master` or `worker` node, you will be able to `curl -k https://${MASTER_IP}` (and get a `401 Unauthorized` response, which is good).  However that `${MASTER_IP}` is not externally accessible.  The plan is to add an HA Proxy node at [`10.244.0.34`](https://github.com/cloudfoundry/bosh-lite/blob/ea94b4de9a90f1a83c3b541a034a4cdbab04e733/packer/templates/vagrant-aws.tpl#L69-L71), configure wildcard DNS pointed at the BOSH-Lite instance, forward traffic on port 443 for the `kube-master` host to the `${MASTER_IP}`.
-
-The DNS and Guestbook Frontend services are not even accessible from the `master` or `worker` nodes.  Both services are given "Cluster IPs" on the flannel overlay network, and commands like `nc 10.244.64.2 53` (where `10.244.64.2` is the `dns_ip`) and `nc 10.244.64.3 80` (where `10.244.64.3` is the `frontend_ip`) both succeed, but the corresponding `nslookup` or `curl` calls hang or fail, e.g.:
-
-```
-root@84cfbe94-e412-4f82-9209-284bc7f961c9:~# curl -vvv http://10.244.64.3:80
-* Rebuilt URL to: http://10.244.64.3:80/
-* Hostname was NOT found in DNS cache
-*   Trying 10.244.64.3...
-* Connected to 10.244.64.3 (10.244.64.3) port 80 (#0)
-> GET / HTTP/1.1
-> User-Agent: curl/7.35.0
-> Host: 10.244.64.3
-> Accept: */*
->
-* Recv failure: Connection reset by peer
-* Closing connection 0
-curl: (56) Recv failure: Connection reset by peer
-```
-
-The plan would be to have the same HA Proxy forward traffic on port 80 for the `guestbook` host to the `frontend_ip`, but based on the above error it seems that is not even likely to work.  Perhaps flannel is misconfigured?
+The plan is to add an HA Proxy node at [`10.244.0.34`](https://github.com/cloudfoundry/bosh-lite/blob/ea94b4de9a90f1a83c3b541a034a4cdbab04e733/packer/templates/vagrant-aws.tpl#L69-L71), forwarding traffic on port 443 to the master node to allow reaching the Kubernetes master API, and forwarding traffic on port 80 to port 30080 on the worker nodes to allow reaching the Guestbook Frontend service.
 
 **Highly-Available Master Deployments**:
 
