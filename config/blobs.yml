@@ -23,3 +23,7 @@ xz/xz-5.2.2.tar.gz:
   object_id: c3cf0463-0911-4cee-a066-5607356ec002
   sha: 14663612422ab61386673be78fbb2556f50a1f08
   size: 1464228
+kubectl/kubectl-1.0.6:
+  object_id: 789a9dc0-1979-4015-be3e-b9273ff79760
+  sha: 96a68db14e2154fec902a6b9bf45b9f43f59f507
+  size: 19387136
