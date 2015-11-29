@@ -10,7 +10,7 @@ This is not presently a production-ready release. This is a work in progress. It
 
 ## Usage
 
-This project packages up Kubernetes as a BOSH release, to be deployed in any configuration, on several possible supported IaaSes by a BOSH director.
+This goal of this project is to package up Kubernetes as a BOSH release, to be deployed in any configuration, on several possible supported IaaSes by a BOSH director.
 
 #### A Brief Preamble on BOSH
 
@@ -33,9 +33,51 @@ For more on BOSH, visit [bosh.io](http://bosh.io/) and check out [the docs](http
 1. Run `bosh -d ${PATH_TO_MANIFEST} deploy`.
 1. Deploy the DNS Add-On Service: `bosh -d ${PATH_TO_MANIFEST} run errand deploy_dns_add_on`.
 
+You should be able to target your Kubernetes master with the [kubectl](https://github.com/kubernetes/kubernetes/blob/master/docs/user-guide/kubectl/kubectl.md) CLI.  It should be serving HTTPS traffic on port 443 of the master host, [see here](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html) for details on TLS configuration of the CLI.  The CA, certificate, and key mentioned in that document are the same ones used by the DNS Add-On errand, which uses kubectl to deploy the DNS service itself.
+
 *Fun fact: If you use BOSH-Lite, you'll have a Vagrant VM, with nodes in the Kubernetes clusters running as [Garden](https://github.com/cloudfoundry-incubator/garden) Linux containers inside the VM, and those nodes will be running Docker inside the Linux containers, which will then run your pods inside Docker containers!*
 
+#### Deploy the Example Guestbook Application
+
+You can deploy the [example guestbook application](https://github.com/kubernetes/kubernetes/blob/master/examples/guestbook/README.md) as a BOSH errand.  The simplest way to do this is to add the errand for it to your manifest (see the example BOSH Lite manifest for an example) and simply:
+
+```
+bosh -d ${PATH_TO_MANIFEST} run errand deploy_example_guestbook
+```
+
+It should be serving on port 80 at the cluster service `frontend_ip` you configure for it.
+
 ## Known Issues
+
+**Nothing is Externally Accessible in AWS BOSH-Lite Deployments**:
+
+If you `bosh ssh` onto a `master` or `worker` node, you will be able to `curl -k https://${MASTER_IP}` (and get a `401 Unauthorized` response, which is good).  However that `${MASTER_IP}` is not externally accessible.  The plan is to add an HA Proxy node at [`10.244.0.34`](https://github.com/cloudfoundry/bosh-lite/blob/ea94b4de9a90f1a83c3b541a034a4cdbab04e733/packer/templates/vagrant-aws.tpl#L69-L71), configure wildcard DNS pointed at the BOSH-Lite instance, forward traffic on port 443 for the `kube-master` host to the `${MASTER_IP}`.
+
+The DNS and Guestbook Frontend services are not even accessible from the `master` or `worker` nodes.  Both services are given "Cluster IPs" on the flannel overlay network, and commands like `nc 10.244.64.2 53` (where `10.244.64.2` is the `dns_ip`) and `nc 10.244.64.3 80` (where `10.244.64.3` is the `frontend_ip`) both succeed, but the corresponding `nslookup` or `curl` calls hang or fail, e.g.:
+
+```
+root@84cfbe94-e412-4f82-9209-284bc7f961c9:~# curl -vvv http://10.244.64.3:80
+* Rebuilt URL to: http://10.244.64.3:80/
+* Hostname was NOT found in DNS cache
+*   Trying 10.244.64.3...
+* Connected to 10.244.64.3 (10.244.64.3) port 80 (#0)
+> GET / HTTP/1.1
+> User-Agent: curl/7.35.0
+> Host: 10.244.64.3
+> Accept: */*
+>
+* Recv failure: Connection reset by peer
+* Closing connection 0
+curl: (56) Recv failure: Connection reset by peer
+```
+
+The plan would be to have the same HA Proxy forward traffic on port 80 for the `guestbook` host to the `frontend_ip`, but based on the above error it seems that is not even likely to work.  Perhaps flannel is misconfigured?
+
+**Highly-Available Master Deployments**:
+
+This is not supported at this time. It is not known whether this scenario is well-supported within Kubernetes itself.  See [here](http://kubernetes.io/v1.0/docs/admin/high-availability.html#introduction):
+
+> Also, at this time high availability support for Kubernetes is not continuously tested in our end-to-end (e2e) testing.
 
 **"Error updating node status" in `kubelet_master` logs**:
 

@@ -1,0 +1,37 @@
+#!/bin/bash -l
+
+set -e -x -u
+
+chmod +x /var/vcap/packages/kubectl/bin/kubectl
+export PATH=/var/vcap/packages/kubectl/bin:${PATH}
+
+kubectl config set-cluster default-cluster \
+  --server=https://<%= p("kubernetes.deploy_example_guestbook.master_host") %> \
+  --certificate-authority=<%= p("kubernetes.deploy_example_guestbook.ssl_dir") %>/ca.pem
+kubectl config set-credentials default-admin \
+  --certificate-authority=<%= p("kubernetes.deploy_example_guestbook.ssl_dir") %>/ca.pem \
+  --client-key=<%= p("kubernetes.deploy_example_guestbook.ssl_dir") %>/admin-key.pem \
+  --client-certificate=<%= p("kubernetes.deploy_example_guestbook.ssl_dir") %>/admin.pem
+kubectl config set-context default-system \
+  --cluster=default-cluster \
+  --user=default-admin
+kubectl config use-context default-system
+
+guestbook_running=false
+for i in $(seq <%= p("kubernetes.deploy_example_guestbook.deploy_timeout_in_seconds") %>); do
+  if kubectl get services | grep guestbook; then
+    guestbook_running=true
+    break
+  fi
+
+  kubectl create -f /var/vcap/jobs/deploy-example-guestbook/guestbook-all-in-one.yaml
+  sleep 1
+done
+
+if ${guestbook_running}; then
+  echo "DNS Add-On running successfully"
+  exit 0
+else
+  echo "DNS Add-On failed to run successfully"
+  exit 1
+fi

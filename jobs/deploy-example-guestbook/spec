@@ -1,0 +1,45 @@
+---
+name: deploy-example-guestbook
+
+description: "This errand deploys the example guestbook application to the Kubernetes cluster. See https://github.com/kubernetes/kubernetes/tree/master/examples/guestbook"
+
+packages:
+  - kubectl
+
+templates:
+  run.erb: bin/run
+  guestbook-all-in-one.yaml.erb: guestbook-all-in-one.yaml
+
+  ca.pem.erb: "etc/kubernetes/ssl/ca.pem"
+  admin.pem.erb: "etc/kubernetes/ssl/admin.pem"
+  admin-key.pem.erb: "etc/kubernetes/ssl/admin-key.pem"
+
+properties:
+  kubernetes.deploy_example_guestbook.deploy_timeout_in_seconds:
+    description: |
+      Number of seconds to spend trying to deploy the example guestbook.
+    default: 30
+
+  kubernetes.deploy_example_guestbook.services.frontend_ip:
+    description: |
+      The virtual IP address of the guestbook frontend service. This IP must be
+      in the service IP range and cannot be the first IP in the range.  It
+      should also not collide with any other service IPs, e.g. the DNS Add-On.
+    example: 10.244.64.3
+
+  kubernetes.deploy_example_guestbook.ssl_dir:
+    description: |
+      DO NOT CHANGE THIS VALUE!
+      Location of TLS assets.
+    default: /var/vcap/jobs/deploy-example-guestbook/etc/kubernetes/ssl
+
+  kubernetes.deploy_example_guestbook.ssl.ca:
+    description: PEM encoded root CA that was used to sign the rest of the certificates.
+  kubernetes.deploy_example_guestbook.ssl.admin.signing_key:
+    description: PEM encoded private RSA key that was used to create Admin CSR.
+  kubernetes.deploy_example_guestbook.ssl.admin.certificate:
+    description: PEM encoded Admin certificate.
+
+  kubernetes.deploy_example_guestbook.master_host:
+    description: IP of the kubelet master host
+    example: 10.244.5.2
