@@ -28,7 +28,7 @@ For more on BOSH, visit [bosh.io](http://bosh.io/) and check out [the docs](http
   * For simple hacking, the easiest thing to do is `vagrant up` a [BOSH-Lite](https://github.com/cloudfoundry/bosh-lite) which deploys do Linux containers instead of IaaS VMs. (In this case, you'll have a Vagrant VM, with nodes in the Kubernetes clusters running in Linux containers inside the VM, and those nodes will be running Docker inside the Linux containers, which wlil then run your pods inside Docker containers!)
   * For a real deployment, [use `bosh-init`](https://bosh.io/docs/using-bosh-init.html).
 1. Get the [`bosh` CLI](https://bosh.io/docs/bosh-cli.html) and [target your Director](https://bosh.io/docs/sysadmin-commands.html#director).
-1. Create a [BOSH deployment manifest](https://bosh.io/docs/deployment-manifest.html) referencing this release, [etcd release](https://bosh.io/releases/github.com/cloudfoundry-incubator/etcd-release?all=1) and an IaaS-appropriate [BOSH stemcell](https://bosh.io/stemcells):
+1. Create a [BOSH deployment manifest](https://bosh.io/docs/deployment-manifest.html) describing your desired deployment topology (e.g. number of etcd nodes, Kubernetes master nodes, and Kubernetes worker nodes); your manifest should reference this release, [etcd release](https://bosh.io/releases/github.com/cloudfoundry-incubator/etcd-release?all=1) and an IaaS-appropriate [BOSH stemcell](https://bosh.io/stemcells):
   * If deploying to BOSH-Lite, you can mostly crib off the [BOSH-Lite example manifest](example_deployments/bosh-lite/kubernetes.yml).
 1. Run `bosh -d ${PATH_TO_MANIFEST} deploy`.
 
@@ -63,18 +63,16 @@ See [`daemon` command documentation](https://docs.docker.com/engine/reference/co
 
 ## Contributing
 
-**Everyone** is encouraged to help improve this project.
+*Everyone* is encouraged to help improve this project. Here are some ways *you* can contribute:
 
-Here are some ways *you* can contribute:
-
-* by using it
-* by suggesting new features
-* by reporting and commenting on [issues](https://github.com/amitkgupta/kubernetes-release/issues)
-* by submitting and commenting on [pull requests](https://github.com/amitkgupta/kubernetes-release/pulls):
-  * write or edit documentation
-  * write unit, functional, or system tests
-  * write code (**no patch is too small**: fix typos, add comments, clean up inconsistent whitespace)
-  * refactor code
+* use it,
+* suggest new features,
+* report new [issues](https://github.com/amitkgupta/kubernetes-release/issues) or comment on existing ones, or
+* submit [pull requests](https://github.com/amitkgupta/kubernetes-release/pulls) or comment on existing ones; pull requests can include:
+  * writing or editing documentation
+  * writing unit, functional, or system tests
+  * writing code, even small things such as fixing typos, adding comments, cleaning up inconsistent whitespace, etc.
+  * refactoring code
 
 #### Submitting an Issue
 
