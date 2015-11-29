@@ -24,13 +24,15 @@ For more on BOSH, visit [bosh.io](http://bosh.io/) and check out [the docs](http
 
 #### Step-by-Step Instructions
 
-1. Deploy a BOSH Director:
-  * For simple hacking, the easiest thing to do is `vagrant up` a [BOSH-Lite](https://github.com/cloudfoundry/bosh-lite) which deploys do Linux containers instead of IaaS VMs. (In this case, you'll have a Vagrant VM, with nodes in the Kubernetes clusters running in Linux containers inside the VM, and those nodes will be running Docker inside the Linux containers, which wlil then run your pods inside Docker containers!)
+1. Deploy a BOSH Director.
+  * For simple hacking, the easiest thing to do is `vagrant up` a [BOSH-Lite](https://github.com/cloudfoundry/bosh-lite) which deploys to Linux containers instead of IaaS VMs.
   * For a real deployment, [use `bosh-init`](https://bosh.io/docs/using-bosh-init.html).
 1. Get the [`bosh` CLI](https://bosh.io/docs/bosh-cli.html) and [target your Director](https://bosh.io/docs/sysadmin-commands.html#director).
-1. Create a [BOSH deployment manifest](https://bosh.io/docs/deployment-manifest.html) describing your desired deployment topology (e.g. number of etcd nodes, Kubernetes master nodes, and Kubernetes worker nodes); your manifest should reference this release, [etcd release](https://bosh.io/releases/github.com/cloudfoundry-incubator/etcd-release?all=1) and an IaaS-appropriate [BOSH stemcell](https://bosh.io/stemcells):
+1. Create a [BOSH deployment manifest](https://bosh.io/docs/deployment-manifest.html) describing your desired deployment topology (e.g. number of etcd nodes, Kubernetes master nodes, and Kubernetes worker nodes); your manifest should reference this release, [etcd release](https://bosh.io/releases/github.com/cloudfoundry-incubator/etcd-release?all=1) and an IaaS-appropriate [BOSH stemcell](https://bosh.io/stemcells).
   * If deploying to BOSH-Lite, you can mostly crib off the [BOSH-Lite example manifest](example_deployments/bosh-lite/kubernetes.yml).
 1. Run `bosh -d ${PATH_TO_MANIFEST} deploy`.
+
+*Fun fact: If you use BOSH-Lite, you'll have a Vagrant VM, with nodes in the Kubernetes clusters running as [Garden](https://github.com/cloudfoundry-incubator/garden) Linux containers inside the VM, and those nodes will be running Docker inside the Linux containers, which will then run your pods inside Docker containers!*
 
 ## Known Issues
 
@@ -53,7 +55,7 @@ This is likely a manifestation of the issue mentioned [here](https://coreos.com/
 
 **"Failed to acquire subnet: out of subnets" in `flannel` logs**:
 
-It's not clear if this is actually breaking anything, but simply providing a `pod_network` larger than `/23` should work around the issue.
+It's not clear if this is actually breaking anything, but simply providing a `pod_network` larger than `/23` should work around any potential issue.
 
 **Docker puts stuff in `/var/run/docker/netns` and `/var/lib/docker/network`**:
 
