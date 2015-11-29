@@ -33,7 +33,7 @@ For more on BOSH, visit [bosh.io](http://bosh.io/) and check out [the docs](http
 1. Run `bosh -d ${PATH_TO_MANIFEST} deploy`.
 1. Deploy the DNS Add-On Service: `bosh -d ${PATH_TO_MANIFEST} run errand deploy_dns_add_on`.
 
-You should be able to target your Kubernetes master with the [kubectl](https://github.com/kubernetes/kubernetes/blob/master/docs/user-guide/kubectl/kubectl.md) CLI.  It should be serving HTTPS traffic on port 443 of the master host, [see here](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html) for details on TLS configuration of the CLI.  The CA, certificate, and key mentioned in that document are the same ones used by the DNS Add-On errand, which uses kubectl to deploy the DNS service itself.
+You should be able to target your Kubernetes master with the [kubectl](https://github.com/kubernetes/kubernetes/blob/master/docs/user-guide/kubectl/kubectl.md) CLI.  It should be serving HTTPS traffic on port 443 of the master host, [see here](https://coreos.com/kubernetes/docs/latest/configure-kubectl.html) for details on TLS configuration of the CLI.  The CA, certificate, and key mentioned in that document are the same ones used by the DNS Add-On errand, which uses kubectl to deploy the DNS service itself.  If you `bosh ssh` onto the master host, you can also target `localhost:8080` to reach the API without any TLS configuration.
 
 *Fun fact: If you use BOSH-Lite, you'll have a Vagrant VM, with nodes in the Kubernetes clusters running as [Garden](https://github.com/cloudfoundry-incubator/garden) Linux containers inside the VM, and those nodes will be running Docker inside the Linux containers, which will then run your pods inside Docker containers!*
 
@@ -45,13 +45,13 @@ You can deploy the [example guestbook application](https://github.com/kubernetes
 bosh -d ${PATH_TO_MANIFEST} run errand deploy_example_guestbook
 ```
 
-It should be serving on port 80 at the cluster service `frontend_ip` you configure for it.
+It should be serving on port 30080 on all worker hosts.
 
 ## Known Issues
 
 **Nothing is Externally Accessible in AWS BOSH-Lite Deployments**:
 
-The plan is to add an HA Proxy node at [`10.244.0.34`](https://github.com/cloudfoundry/bosh-lite/blob/ea94b4de9a90f1a83c3b541a034a4cdbab04e733/packer/templates/vagrant-aws.tpl#L69-L71), forwarding traffic on port 443 to the master node to allow reaching the Kubernetes master API, and forwarding traffic on port 80 to port 30080 on the worker nodes to allow reaching the Guestbook Frontend service.
+The plan is to add an HA Proxy node at [`10.244.0.34`](https://github.com/cloudfoundry/bosh-lite/blob/ea94b4de9a90f1a83c3b541a034a4cdbab04e733/packer/templates/vagrant-aws.tpl#L69-L71), forwarding HTTPS traffic on port 443 to the master node to allow reaching the Kubernetes master API, and forwarding traffic on port 80 to port 30080 on the worker nodes to allow reaching the Guestbook Frontend service.
 
 **Highly-Available Master Deployments**:
 
