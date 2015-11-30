@@ -17,10 +17,6 @@ releases/**/*.tgz
 config/dev.yml
 config/private.yml
 
-# Private deployment credentials
-example_deployments/**/*.pem
-example_deployments/**/bosh-lite-aws-credentials
-
 # $GOPATH artifacts
 /bin/
 /pkg/

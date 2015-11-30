@@ -17,8 +17,5 @@ kubectl config set-context default-system \
   --user=default-admin
 kubectl config use-context default-system
 
-if kubectl get pods --namespace=kube-system | grep kube-dns-v9; then
-  kubectl replace -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml
-else
-  kubectl create -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml
-fi
+kubectl delete -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml --ignore-not-found
+kubectl create -f /var/vcap/jobs/deploy-dns-add-on/dns-addon.yml

@@ -49,9 +49,13 @@ It should be serving on port 30080 on all worker hosts.
 
 ## Known Issues
 
-**Nothing is Externally Accessible in AWS BOSH-Lite Deployments**:
+**Example Guestbook Application Not Working**:
 
-The plan is to add an HA Proxy node at [`10.244.0.34`](https://github.com/cloudfoundry/bosh-lite/blob/ea94b4de9a90f1a83c3b541a034a4cdbab04e733/packer/templates/vagrant-aws.tpl#L69-L71), forwarding HTTPS traffic on port 443 to the master node to allow reaching the Kubernetes master API, and forwarding traffic on port 80 to port 30080 on the worker nodes to allow reaching the Guestbook Frontend service.
+`curl $WORKER_IP` tends to give the error:
+
+```
+curl: (56) Recv failure: Connection reset by peer
+```
 
 **Highly-Available Master Deployments**:
 

@@ -17,8 +17,5 @@ kubectl config set-context default-system \
   --user=default-admin
 kubectl config use-context default-system
 
-if kubectl get services | grep guestbook; then
-  kubectl replace -f /var/vcap/jobs/deploy-example-guestbook/guestbook-all-in-one.yaml
-else
-  kubectl create -f /var/vcap/jobs/deploy-example-guestbook/guestbook-all-in-one.yaml
-done
+kubectl delete -f /var/vcap/jobs/deploy-example-guestbook/guestbook-all-in-one.yaml --ignore-not-found
+kubectl create -f /var/vcap/jobs/deploy-example-guestbook/guestbook-all-in-one.yaml

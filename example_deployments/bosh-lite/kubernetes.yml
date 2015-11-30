@@ -423,6 +423,8 @@ properties:
       master_host: 10.244.5.2
 
     deploy_example_guestbook:
+      services:
+        frontend_node_port: 30080
       ssl:
         ca: |
           -----BEGIN CERTIFICATE-----

@@ -15,12 +15,12 @@ templates:
   admin-key.pem.erb: "etc/kubernetes/ssl/admin-key.pem"
 
 properties:
-  kubernetes.deploy_example_guestbook.services.frontend_ip:
+  kubernetes.deploy_example_guestbook.services.frontend_node_port:
     description: |
-      The virtual IP address of the guestbook frontend service. This IP must be
-      in the service IP range and cannot be the first IP in the range.  It
-      should also not collide with any other service IPs, e.g. the DNS Add-On.
-    example: 10.244.64.3
+      The Guestbook Frontend service will be exposed via this port. Traffic to
+      any node on this port will be routed to the service (which will in turn
+      balance traffic amongst the pods running the Frontend container).
+    example: 30080
 
   kubernetes.deploy_example_guestbook.ssl_dir:
     description: |
@@ -34,3 +34,7 @@ properties:
     description: PEM encoded private RSA key that was used to create Admin CSR.
   kubernetes.deploy_example_guestbook.ssl.admin.certificate:
     description: PEM encoded Admin certificate.
+
+  kubernetes.deploy_example_guestbook.master_host:
+    description: IP of the kubelet master host
+    example: 10.244.5.2

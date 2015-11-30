@@ -99,7 +99,7 @@ spec:
   type: NodePort
   ports:
   - port: 80
-    nodeport: 30080
+    nodeport: <%= p("kubernetes.deploy_example_guestbook.services.frontend_node_port") %>
   selector:
     app: guestbook
     tier: frontend
